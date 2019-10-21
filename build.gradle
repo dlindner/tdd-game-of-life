@@ -1,0 +1,44 @@
+apply plugin: 'java'
+apply plugin: 'project-report'
+
+compileJava {
+	options.encoding = 'utf-8'
+}
+
+archivesBaseName = 'game-of-life'
+def buildName = System.getenv("BUILD_NUMBER") as Integer ?: getDate()
+
+configurations {
+	deliveredLibs
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src'
+		}
+	}
+	test {
+		java {
+			srcDir 'test/unit'
+		}
+	}
+}
+
+dependencies {
+	testCompile fileTree(dir: 'test/lib', includes: ['**/*.jar'])
+}
+
+repositories {
+	mavenCentral()
+}
+
+test {
+	ignoreFailures = true
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
+}
